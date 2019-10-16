@@ -44,6 +44,15 @@ class author {
 	 * a unique way to represent oneself
 	 */
 
+	/**
+	 * accessor method for the profile id
+	 *
+	 * @return int value of authorId
+	 */
+	public function getAuthorId() {
+	return($this->authorId);
+	}
 
 
-
+}
+?>
