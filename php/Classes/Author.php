@@ -25,8 +25,8 @@ use Ramsey\Uuid\Uuid;
  * This is a cross section of what is probably stored about a Twitter user. This entity is a top level entity that
  * holds the keys to the other entities in this example (i.e., Favorite and Profile).
  *
- * @author Dylan McDonald <dmcdonald21@cnm.edu>
- * @version 4.0.0
+ * @author Daniel Hernandez
+ * @version 1.0.0
  **/
 
 class author {
