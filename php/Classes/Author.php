@@ -159,7 +159,7 @@ class author {
 	 * @throws \RangeException if $newEmail is > 128 characters
 	 * @throws \TypeError if $newEmail is not a string
 	 **/
-	public function setAuthorEmail(string $newAuthorEmail): void {
+	private function setAuthorEmail(string $newAuthorEmail): void {
 		// verify the email is secure
 		$newAuthorEmail = trim($newAuthorEmail);
 		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
@@ -172,6 +172,14 @@ class author {
 		}
 		// store the email
 		$this->authorEmail = $newAuthorEmail;
+	}
+	/**
+	 * accessor method for profileHash
+	 *
+	 * @return string value of hash
+	 */
+	public function getProfileHash(): string {
+		return $this->profileHash;
 	}
 }
 ?>
