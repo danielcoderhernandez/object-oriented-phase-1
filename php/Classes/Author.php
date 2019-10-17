@@ -181,5 +181,14 @@ class author {
 	private function getAuthorHash(): string {
 		return $this->authorHash;
 	}
+
+	/**
+	 * mutator method for author hash password
+	 *
+	 * @param string $newAuthorHash
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 128 characters
+	 * @throws \TypeError if profile hash is not a string
+	 */
 }
 ?>
