@@ -112,7 +112,14 @@ class author {
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
 	}
-
+/**
+	 * accessor method for at handle
+	 *
+	 * @return string value of at handle
+	 **/
+	public function getProfileAtHandle(): string {
+		return ($this->profileAtHandle);
+	}
 
 }
 ?>
