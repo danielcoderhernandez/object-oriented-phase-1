@@ -147,7 +147,17 @@ class author {
 	 *
 	 * @return string value of email
 	 **/
-	public function getProfileEmail(): string {
-		return $this->profileEmail;
+
+	private function getAuthorEmail(): string {
+		return $this->authorEmail;
+	}
+	/**
+	 * mutator method for email
+	 *
+	 * @param string $newProfileEmail new value of email
+	 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
+	 * @throws \RangeException if $newEmail is > 128 characters
+	 * @throws \TypeError if $newEmail is not a string
+	 **/
 }
 ?>
