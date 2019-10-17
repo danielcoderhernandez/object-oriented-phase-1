@@ -142,6 +142,12 @@ class author {
 		// store the at handle
 		$this->authorAtHandle = $newAuthorAtHandle;
 	}
-
+	/**
+	 * accessor method for email
+	 *
+	 * @return string value of email
+	 **/
+	public function getProfileEmail(): string {
+		return $this->profileEmail;
 }
 ?>
