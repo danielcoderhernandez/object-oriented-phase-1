@@ -154,10 +154,24 @@ class author {
 	/**
 	 * mutator method for email
 	 *
-	 * @param string $newProfileEmail new value of email
+	 * @param string $newAuthorEmail new value of email
 	 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
 	 * @throws \RangeException if $newEmail is > 128 characters
 	 * @throws \TypeError if $newEmail is not a string
 	 **/
+	public function setAuthorEmail(string $newAuthorEmail): void {
+		// verify the email is secure
+		$newAuthorEmail = trim($newAuthorEmail);
+		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newAuthorEmail) === true) {
+			throw(new \InvalidArgumentException("author email is empty or insecure"));
+		}
+		// verify the email will fit in the database
+		if(strlen($newAuthorEmail) > 128) {
+			throw(new \RangeException("author email is too large"));
+		}
+		// store the email
+		$this->authorEmail = $newAuthorEmail;
+	}
 }
 ?>
