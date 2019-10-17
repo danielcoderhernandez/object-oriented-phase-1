@@ -1,5 +1,5 @@
 <?php
-namespace danielcoderhernandez\object-oriented-phase-1;
+namespace Desktop/bootcamp/git/object-oriented-phase-1;
 /**
  * Trait to Validate a mySQL Date
  *
