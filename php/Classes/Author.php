@@ -60,7 +60,7 @@ class author {
 	 *
 	 * @return int value of authorId
 	 */
-	public function getAuthorId(): Uuid {
+	private function getAuthorId(): Uuid {
 	return($this->authorId);
 	}
 
@@ -71,7 +71,7 @@ class author {
 	 * @throws \RangeException if $newAuthorId is not positive
  	 * @throws \TypeError if the author Id is not
 	**/
-	public function setAuthorId( $newAuthorId): void {
+	private function setAuthorId( $newAuthorId): void {
 		try {
 			$uuid = self::validateUuid($newAuthorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -86,7 +86,7 @@ class author {
 	 *
 	 * @return string value of the activation token
 	 */
-	public function getAuthorActivationToken() : ?string {
+	private function getAuthorActivationToken() : ?string {
 		return ($this->authorActivationToken);
 	}
 	/**
@@ -97,7 +97,7 @@ class author {
 	 * @throws \RangeException if the token is not exactly 32 characters
 	 * @throws \TypeError if the activation token is not a string
 	 */
-	public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
+	private function setAuthorActivationToken(?string $newAuthorActivationToken): void {
 		if($newAuthorActivationToken === null) {
 			$this->authorActivationToken = null;
 			return;
@@ -111,36 +111,6 @@ class author {
 			throw(new\RangeException("user activation token has to be 32"));
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
-	}
-/**
-	 * accessor method for at handle
-	 *
-	 * @return string value of at handle
-	 **/
-	private function getAuthorAtHandle(): string {
-		return ($this->authorAtHandle);
-	}
-	/**
-	 * mutator method for at handle
-	 *
-	 * @param string $newAuthorAtHandle new value of at handle
-	 * @throws \InvalidArgumentException if $newAtHandle is not a string or insecure
-	 * @throws \RangeException if $newAtHandle is > 32 characters
-	 * @throws \TypeError if $newAtHandle is not a string
-	 **/
-	private function setAuthorAtHandle(string $newAuthorAtHandle) : void {
-		// verify the at handle is secure
-		$newAuthorAtHandle = trim($newAuthorAtHandle);
-		$newAuthorAtHandle = filter_var($newAuthorAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-		if(empty($newAuthorAtHandle) === true) {
-			throw(new \InvalidArgumentException("author at handle is empty or insecure"));
-		}
-		// verify the at handle will fit in the database
-		if(strlen($newAuthorAtHandle) > 32) {
-			throw(new \RangeException("author at handle is too large"));
-		}
-		// store the at handle
-		$this->authorAtHandle = $newAuthorAtHandle;
 	}
 	/**
 	 * accessor method for email
@@ -208,8 +178,6 @@ class author {
 		//store the hash
 		$this->authorHash = $newAuthorHash;
 	}
-
-
 
 }
 ?>
