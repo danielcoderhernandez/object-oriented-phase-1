@@ -1,5 +1,5 @@
 <?php
-namespace Desktop/bootcamp/git/object-oriented-phase-1/php/Classes;
+namespace Desktop/bootcamp/git/object-oriented-phase-1;
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
