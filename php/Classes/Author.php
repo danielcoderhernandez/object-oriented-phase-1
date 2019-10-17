@@ -1,5 +1,4 @@
-<?php>
-
+<?php
 /*
 create table author(
 authorId binary(16) not null,
@@ -13,6 +12,22 @@ unique(authorUsername),
 primary key(authorId)
 );
 */
+
+
+namespace ThisPc\Desktop\bootcamp\git\object-oriented-phase-1;
+
+require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+
+use Ramsey\Uuid\Uuid;
+/**
+ * Cross Section of a Twitter Profile
+ *
+ * This is a cross section of what is probably stored about a Twitter user. This entity is a top level entity that
+ * holds the keys to the other entities in this example (i.e., Favorite and Profile).
+ *
+ * @author Dylan McDonald <dmcdonald21@cnm.edu>
+ * @version 4.0.0
+ **/
 
 class author {
 	/**
@@ -51,6 +66,23 @@ class author {
 	 */
 	public function getAuthorId() {
 	return($this->authorId);
+	}
+
+	/**
+* mutator method for author id
+ *
+	 * @param Uuid | string $newAuthorId value of new author id
+	 * @throws \RangeException if $newAuthorId is not positive
+ 	 * @throws \TypeError if the profile Id is not
+	**/
+	public function setAuthorId($newAuthorId): void {
+		//verify the author id is valid
+		$newAuthorId = filter_var($newAuthorId, FILTER_VALIDATE_INT);
+		if($newAuthorId === false) {
+			throw (new UnexpectedValueException("author id is not a valid integer"));
+		}
+		//convert and store the author id
+		$this->authorId = intval($newAuthorId);
 	}
 
 
