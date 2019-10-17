@@ -38,6 +38,7 @@ class author {
 	private $authorActivationToken;
 	/*
 	 * a way for the user to represent themselves
+	 * @var string $authorAvatarUrl
 	 */
 	private $authorAvatarUrl;
 	/**
@@ -52,15 +53,44 @@ class author {
 	private $authorHash;
 	/*
 	 * unique username for this author
+	 * @var $authorUsername
 	 */
 	private $authorUsername;
 
 	/**
+	 * constructor for this Author
+	 *
+	 * @param string|Uuid $newAuthorId id of this author or null if a new author
+	 * @param string $newAuthorActivationToken activation token to safe guard against malicious accounts
+	 * @param string $newAuthorAvatarUrl string containing avatar
+	 * @param string $newAuthorEmail string containing email
+	 * @param string $newAuthorHash string containing password hash
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if a data type violates a data hint
+	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
+	 **/
+	public function __construct($newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash) {
+		try {
+			$this->setAuthorId($newAuthorId);
+			$this->setAuthorActivationToken($newAuthorActivationToken);
+			$this->setAuthorAvatar($newAuthorAvatarUrl);
+			$this->setAuthorEmail($newAuthorEmail);
+			$this->setAuthorHash($newAuthorHash);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			//determine what exception type was thrown
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+	}
+
+	/**
 	 * accessor method for the author id
 	 *
-	 * @return int value of authorId
+	 * @return int value of author id
 	 */
-	private function getAuthorId(): Uuid {
+	public function getAuthorId(): Uuid {
 	return($this->authorId);
 	}
 
@@ -71,7 +101,7 @@ class author {
 	 * @throws \RangeException if $newAuthorId is not positive
  	 * @throws \TypeError if the author Id is not
 	**/
-	private function setAuthorId( $newAuthorId): void {
+	public function setAuthorId( $newAuthorId): void {
 		try {
 			$uuid = self::validateUuid($newAuthorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -86,7 +116,7 @@ class author {
 	 *
 	 * @return string value of the activation token
 	 */
-	private function getAuthorActivationToken() : ?string {
+	public function getAuthorActivationToken() : ?string {
 		return ($this->authorActivationToken);
 	}
 	/**
@@ -97,7 +127,7 @@ class author {
 	 * @throws \RangeException if the token is not exactly 32 characters
 	 * @throws \TypeError if the activation token is not a string
 	 */
-	private function setAuthorActivationToken(?string $newAuthorActivationToken): void {
+	public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
 		if($newAuthorActivationToken === null) {
 			$this->authorActivationToken = null;
 			return;
@@ -112,24 +142,46 @@ class author {
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
 	}
+
+	/**
+	 * accessor method for Avatar
+	 *
+	 * @return string value of Avatar
+	 */
+	public function getAuthorAvatarUrl() {
+		return $this->authorAvatarUrl;
+	}
+	/**
+	 * *mutator method for Avatar
+	 *
+	 */
+
+	public function setAuthorAvatar(string $newAuthorAvatar): void {
+		// verify the Avatar will fit in the database
+		if(strlen($newAuthorAvatar) > 128) {
+			throw(new \RangeException("author avatar is too large"));
+		}
+		// store the Avatar
+		$this->authorAvatar = $newAuthorAvatar;
+	}
 	/**
 	 * accessor method for email
 	 *
 	 * @return string value of email
 	 **/
 
-	private function getAuthorEmail(): string {
+	public function getAuthorEmail(): string {
 		return $this->authorEmail;
 	}
 	/**
 	 * mutator method for email
-	 *
 	 * @param string $newAuthorEmail new value of email
 	 * @throws \InvalidArgumentException if $newEmail is not a valid email or insecure
 	 * @throws \RangeException if $newEmail is > 128 characters
 	 * @throws \TypeError if $newEmail is not a string
 	 **/
-	private function setAuthorEmail(string $newAuthorEmail): void {
+
+	public function setAuthorEmail(string $newAuthorEmail): void {
 		// verify the email is secure
 		$newAuthorEmail = trim($newAuthorEmail);
 		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
@@ -143,12 +195,13 @@ class author {
 		// store the email
 		$this->authorEmail = $newAuthorEmail;
 	}
+
 	/**
 	 * accessor method for authorHash
 	 *
 	 * @return string value of hash
 	 */
-	private function getAuthorHash(): string {
+	public function getAuthorHash(): string {
 		return $this->authorHash;
 	}
 
@@ -160,7 +213,7 @@ class author {
 	 * @throws \RangeException if the hash is not 128 characters
 	 * @throws \TypeError if author hash is not a string
 	 */
-		private function setAuthorHash(string $newAuthorHash): void {
+		public function setAuthorHash(string $newAuthorHash): void {
 		//enforce that the hash is properly formatted
 		$newAuthorHash = trim($newAuthorHash);
 		if(empty($newAuthorHash) === true) {
