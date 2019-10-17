@@ -14,7 +14,7 @@ primary key(authorId)
 */
 
 
-namespace ThisPc\Desktop\bootcamp\git\object-oriented-phase-1;
+Desktop/bootcamp/git/object-oriented-phase-1;
 
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 
