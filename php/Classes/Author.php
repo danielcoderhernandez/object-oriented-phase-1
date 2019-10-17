@@ -117,8 +117,30 @@ class author {
 	 *
 	 * @return string value of at handle
 	 **/
-	public function getProfileAtHandle(): string {
-		return ($this->profileAtHandle);
+	private function getAuthorAtHandle(): string {
+		return ($this->authorAtHandle);
+	}
+	/**
+	 * mutator method for at handle
+	 *
+	 * @param string $newAuthorAtHandle new value of at handle
+	 * @throws \InvalidArgumentException if $newAtHandle is not a string or insecure
+	 * @throws \RangeException if $newAtHandle is > 32 characters
+	 * @throws \TypeError if $newAtHandle is not a string
+	 **/
+	private function setAuthorAtHandle(string $newAuthorAtHandle) : void {
+		// verify the at handle is secure
+		$newAuthorAtHandle = trim($newAuthorAtHandle);
+		$newAuthorAtHandle = filter_var($newAuthorAtHandle, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newAuthorAtHandle) === true) {
+			throw(new \InvalidArgumentException("author at handle is empty or insecure"));
+		}
+		// verify the at handle will fit in the database
+		if(strlen($newAuthorAtHandle) > 32) {
+			throw(new \RangeException("author at handle is too large"));
+		}
+		// store the at handle
+		$this->authorAtHandle = $newAuthorAtHandle;
 	}
 
 }
