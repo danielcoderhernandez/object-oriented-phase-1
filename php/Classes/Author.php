@@ -71,14 +71,14 @@ class author {
 	 * @throws \RangeException if $newAuthorId is not positive
  	 * @throws \TypeError if the author Id is not
 	**/
-	public function setProfileId( $newAuthorId): void {
+	public function setAuthorId( $newAuthorId): void {
 		try {
-			$uuid = self::validateUuid($newProfileId);
+			$uuid = self::validateUuid($newAuthorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			$exceptionType = get_class($exception);
 			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		// convert and store the profile id
+		// convert and store the author id
 		$this->authorId = $uuid;
 	}
 	/**
@@ -92,11 +92,26 @@ class author {
 	/**
 	 * mutator method for account activation token
 	 *
-	 * @param string $newProfileActivationToken
+	 * @param string $newAuthorActivationToken
 	 * @throws \InvalidArgumentException  if the token is not a string or insecure
 	 * @throws \RangeException if the token is not exactly 32 characters
 	 * @throws \TypeError if the activation token is not a string
 	 */
+	public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
+		if($newAuthorActivationToken === null) {
+			$this->authorActivationToken = null;
+			return;
+		}
+		$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
+		if(ctype_xdigit($newAuthorActivationToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+		//make sure user activation token is only 32 characters
+		if(strlen($newAuthorActivationToken) !== 32) {
+			throw(new\RangeException("user activation token has to be 32"));
+		}
+		$this->authorActivationToken = $newAuthorActivationToken;
+	}
 
 
 }
