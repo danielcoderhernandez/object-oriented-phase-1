@@ -174,12 +174,12 @@ class author {
 		$this->authorEmail = $newAuthorEmail;
 	}
 	/**
-	 * accessor method for profileHash
+	 * accessor method for authorHash
 	 *
 	 * @return string value of hash
 	 */
-	public function getProfileHash(): string {
-		return $this->profileHash;
+	private function getAuthorHash(): string {
+		return $this->authorHash;
 	}
 }
 ?>
