@@ -16,7 +16,7 @@ primary key(authorId)
 
 namespace DanielCoderHernandez\ObjectOriented;
 
-require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
+require_once(dirname(__DIR__, 1) . "/Classes/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 /**
@@ -25,7 +25,7 @@ use Ramsey\Uuid\Uuid;
  * @version 1.0.0
  **/
 
-class author {
+class Author {
 	use ValidateUuid;
 	/**
 	 * id for this author; this is the primary key
@@ -219,11 +219,12 @@ class author {
 		if(empty($newAuthorHash) === true) {
 			throw(new \InvalidArgumentException("author password hash empty or insecure"));
 		}
-		//enforce the hash is really an Argon hash
+		/*enforce the hash is really an Argon hash
 		$authorHashInfo = password_get_info($newAuthorHash);
 		if($authorHashInfo["algoName"] !== "argon2i") {
 			throw(new \InvalidArgumentException("author hash is not a valid hash"));
-		}
+
+		}*/
 		//enforce that the hash is exactly 97 characters.
 		if(strlen($newAuthorHash) !== 97) {
 			throw(new \RangeException("author hash must be 97 characters"));
@@ -233,4 +234,4 @@ class author {
 	}
 
 }
-?>
+
