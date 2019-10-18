@@ -33,7 +33,7 @@ class Author {
 	private $authorId;
 	/**
 	 * token handed out to verify that the author is valid and not malicious.
-	 *@var $authorActivationToken
+	 * @var $authorActivationToken
 	 **/
 	private $authorActivationToken;
 	/*
@@ -51,11 +51,8 @@ class Author {
 	 * @var $authorHash
 	 **/
 	private $authorHash;
-	/*
-	 * unique username for this author
-	 * @var $authorUsername
-	 */
-	private $authorUsername;
+
+
 
 	/**
 	 * constructor for this Author
