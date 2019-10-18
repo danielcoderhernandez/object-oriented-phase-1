@@ -9,13 +9,13 @@
  * @param string $class fully qualified class name to load
  * @see http://www.php-fig.org/psr/psr-4/examples/ PSR-4 Example Autoloader
  **/
-spl_autoload_register(function($class name) {
+spl_autoload_register(function($class) {
 	/**
 	 * CONFIGURABLE PARAMETERS
 	 * prefix: the prefix for all the classes (i.e., the namespace)
 	 * baseDir: the base directory for all classes (default = current directory)
 	 **/
-	$prefix = "danielcoderhernandez\\object-oriented-phase-1";
+	$prefix = "DanielCoderHernandez\\ObjectOriented";
 	$baseDir = __DIR__;
 
 	// does the class use the namespace prefix?
