@@ -1,6 +1,7 @@
 <?php
 namespace DanielCoderHernandez\ObjectOriented;
-require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
+require_once ("autoload.php");
+require_once(dirname(__DIR__, 1) . "/Classes/author.php");
 use Ramsey\Uuid\Uuid;
 /**
  * Trait to validate a uuid
@@ -12,7 +13,7 @@ use Ramsey\Uuid\Uuid;
  * 3. Ramsey\Uuid\Uuid object
  *
  * @author Daniel Hernandez
- * @package
+ * @package Edu\Cnm\Misqoute
  **/
 trait ValidateUuid {
 	/**
