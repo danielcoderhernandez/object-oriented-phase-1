@@ -15,7 +15,7 @@ primary key(authorId)
 
 
 namespace DanielCoderHernandez\ObjectOriented;
-
+require_once ("autoload.php")
 require_once(dirname(__DIR__, 1) . "/Classes/autoload.php");
 
 use Ramsey\Uuid\Uuid;
@@ -25,7 +25,7 @@ use Ramsey\Uuid\Uuid;
  * @version 1.0.0
  **/
 
-class Author {
+class Author implements \JsonSerializable {
 	use ValidateUuid;
 	/**
 	 * id for this author; this is the primary key
@@ -51,7 +51,10 @@ class Author {
 	 * @var $authorHash
 	 **/
 	private $authorHash;
-
+	/**
+	 * unique username for author
+	 */
+	private $authorUsername;
 
 
 	/**
@@ -62,19 +65,18 @@ class Author {
 	 * @param string $newAuthorAvatarUrl string containing avatar
 	 * @param string $newAuthorEmail string containing email
 	 * @param string $newAuthorHash string containing password hash
-	 * @throws \InvalidArgumentException if data types are not valid
-	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
-	 * @throws \TypeError if a data type violates a data hint
-	 * @throws \Exception if some other exception occurs
+	 * @param string $newAuthorUsername username of author
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
-	 **/
-	public function __construct($newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash) {
+	 */
+	public function __construct(string $newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail,
+										 string $newAuthorHash, string $newAuthorUsername) {
 		try {
 			$this->setAuthorId($newAuthorId);
 			$this->setAuthorActivationToken($newAuthorActivationToken);
 			$this->setAuthorAvatar($newAuthorAvatarUrl);
 			$this->setAuthorEmail($newAuthorEmail);
 			$this->setAuthorHash($newAuthorHash);
+			$this->setAuthorUsername($newAuthorUsername);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
@@ -155,7 +157,7 @@ class Author {
 
 	public function setAuthorAvatar(string $newAuthorAvatar): void {
 		// verify the Avatar will fit in the database
-		if(strlen($newAuthorAvatar) > 128) {
+		if(strlen($newAuthorAvatar) > 255) {
 			throw(new \RangeException("author avatar is too large"));
 		}
 		// store the Avatar
@@ -230,5 +232,36 @@ class Author {
 		$this->authorHash = $newAuthorHash;
 	}
 
+	/**
+	 * accessor method for username
+	 *
+	 * @return string value of username
+	 **/
+
+	public function getAuthorUsername(){
+		return $this->authorUsername;
+	}
+	/**
+	 * mutator method for username
+	 * @param string $newAuthorUsername new value of username
+	 * @throws \InvalidArgumentException if $newUsername is not a valid Username
+	 * @throws \RangeException if $newUsername is > 32 characters
+	 * @throws \TypeError if $newUsername is not a string
+	 **/
+
+	public function setAuthorUsername(string $newAuthorUsername): void {
+		// verify the email is secure
+		$newAuthorUsername = trim($newAuthorUsername);
+		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if($newAuthorUsername === false) {
+			throw(new \InvalidArgumentException("author username is empty or invalid"));
+		}
+		// verify the username will fit in the database
+		if(strlen($newAuthorUsername) > 32) {
+			throw(new \RangeException("author username is too large"));
+		}
+		// store the Username
+		$this->authorUsername = $newAuthorUsername;
+	}
 }
 
