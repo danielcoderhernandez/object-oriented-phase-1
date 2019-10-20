@@ -8,9 +8,9 @@ require_once(dirname(__DIR__, 1) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 	/**
  	*Cross Section of Author
- 	* holds keys to the other entities
+ 	*
  	* @author Daniel Hernandez
- 	* @version 1.0.0
+ 	* @version 1.0.1
  	**/
 
 	class author implements \JsonSerializable {
@@ -278,7 +278,6 @@ use Ramsey\Uuid\Uuid;
 	 		* @param string $newAuthorUsername new value of username
 	 		* @throws \InvalidArgumentException if $newUsername is not a valid Username
 	 		* @throws \RangeException if $newUsername is > 32 characters
-	 		* @throws \TypeError if $newUsername is not a string
 	 		**/
 
 		public function setAuthorUsername(string $newAuthorUsername): void {

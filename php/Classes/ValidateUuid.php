@@ -1,8 +1,8 @@
 <?php
 namespace DanielCoderHernandez\ObjectOriented;
 require_once ("autoload.php");
-require_once(dirname(__DIR__, 1) . "/Classes/author.php");
-use Ramsey\Uuid\Uuid;
+require_once(dirname(__DIR__, 1) . "/Classes/Author.php");
+use Ramsey\Uuid\Uuid as Uuid;
 /**
  * Trait to validate a uuid
  *
