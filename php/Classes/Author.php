@@ -13,7 +13,7 @@ use Ramsey\Uuid\Uuid;
  	* @version 1.0.1
  	**/
 
-	class author implements \JsonSerializable {
+	class Author implements \JsonSerializable {
 		use ValidateUuid;
 		/**
 	 	* id for this author; this is the primary key
