@@ -1,7 +1,8 @@
 <?php
-	use DanielCoderHernandez\ObjectOriented\Author;
 
-	require_once("../Classes/Author.php");
+	require_once('../Classes/Author.php');
+use DanielCoderHernandez\ObjectOriented\Author;
+use Ramsey\Uuid\Uuid;
 
 	$danny = new Author("f7286cc1-5d88-4a91-844e-588cbb940c67",
 	"f6cac5f10e4d14bf1cf85cfec2a0a24c",
