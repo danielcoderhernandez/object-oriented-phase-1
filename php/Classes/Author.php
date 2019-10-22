@@ -305,6 +305,7 @@ use Ramsey\Uuid\Uuid;
 		 **/
 		public function insert(\PDO $pdo) : void {
 
+			/**
 			// create query template
 			$query = "INSERT INTO author(authorId,authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) 
 							VALUES(:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorHash, :authorUsername)";
@@ -317,6 +318,7 @@ use Ramsey\Uuid\Uuid;
 				"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
 			$statement->execute($parameters);
 		}
+			 **/
 
 
 		/**
