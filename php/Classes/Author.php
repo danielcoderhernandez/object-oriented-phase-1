@@ -375,12 +375,12 @@ use Ramsey\Uuid\Uuid;
 
 
 			/**
-			$formattedDate = $this->authorDate->format("Y-m-d H:i:s.u");
-			$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationTokenId" => $this->authorActivationToken->getBytes(),
-			"authorAvatarUrl" => $this->authorAvatarUrl->getBytes(),"authorEmail" => $this->authorEmail->getBytes(),
-			"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
-			$statement->execute($parameters);
-		}
+			*$formattedDate = $this->authorDate->format("Y-m-d H:i:s.u");
+			*$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationTokenId" => $this->authorActivationToken->getBytes(),
+			*"authorAvatarUrl" => $this->authorAvatarUrl->getBytes(),"authorEmail" => $this->authorEmail->getBytes(),
+			*"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
+			*$statement->execute($parameters);
+			*}
 		**/
 
 		/**
