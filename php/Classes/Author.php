@@ -305,20 +305,28 @@ use Ramsey\Uuid\Uuid;
 		 **/
 		public function insert(\PDO $pdo) : void {
 
-			/**
+
 			// create query template
+
 			$query = "INSERT INTO author(authorId,authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) 
 							VALUES(:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorHash, :authorUsername)";
 			$statement = $pdo->prepare($query);
 
+			$parameters = ["authorId" => $this->authorId->getBytes(), "authorAvatarUrl" => $this->authorAvatarUrl, "authorActivationToken" => $this->authorActivationToken,
+				"authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash, "authorUserName" => $this->authorUsername];
+			$statement->execute($parameters);
+		}
+
+		/**
 			// bind the member variables to the place holders in the template
 			$formattedDate = $this->authorDate->format("Y-m-d H:i:s.u");
 			$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationTokenId" => $this->authorActivationToken->getBytes(),
 				"authorAvatarUrl" => $this->authorAvatarUrl->getBytes(),"authorEmail" => $this->authorEmail->getBytes(),
 				"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
 			$statement->execute($parameters);
-		}
-			 **/
+
+		 * */
+
 
 
 		/**
@@ -340,43 +348,58 @@ use Ramsey\Uuid\Uuid;
 		}
 
 		/**
-		 * updates this Tweet in mySQL
+		 * updates this author in mySQL
 		 *
 		 * @param \PDO $pdo PDO connection object
 		 * @throws \PDOException when mySQL related errors occur
-		 * @throws \TypeError if $pdo is not a PDO connection object
+		 *
 		 **/
 		public function update(\PDO $pdo) : void {
 
-			// create query template
-			$query = "UPDATE author SET authorId = :authorId, authorActivationToken = :authorActivationToken, tweetDate = :tweetDate WHERE tweetId = :tweetId";
-			$statement = $pdo->prepare($query);
+				// create query template
+				$query = "UPDATE author SET authorAvatarUrl = :authorAvatarUrl, authorActivationToken = :authorActivationToken, 
+    						authorEmail = :authorEmail, authorHash = :authorHash, authorUsername = :authorUsername 
+							WHERE authorId = :authorId";
+				$statement = $pdo->prepare($query);
+
+				//bind the member variables to the place holders in the template
+
+				$parameters = ["authorId" => $this->authorId->getBytes(), "authorAvatarUrl" => $this->authorAvatarUrl,
+					"authorActivationToken" => $this->authorActivationToken, "authorEmail" => $this->authorEmail,
+					"authorHash" => $this->authorHash, "authorUserName" => $this->authorUsername];
+				$statement = $pdo->execute($parameters);
+			}
 
 
-			$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-			$parameters = ["tweetId" => $this->tweetId->getBytes(),"tweetProfileId" => $this->tweetProfileId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+			/**
+			$formattedDate = $this->authorDate->format("Y-m-d H:i:s.u");
+			$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationTokenId" => $this->authorActivationToken->getBytes(),
+			"authorAvatarUrl" => $this->authorAvatarUrl->getBytes(),"authorEmail" => $this->authorEmail->getBytes(),
+			"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
 			$statement->execute($parameters);
 		}
+		**/
 
 		/**
-		 * gets the Tweet by tweetId
+		 * gets the author by authorId
 		 *
 		 * @param \PDO $pdo PDO connection object
-		 * @param Uuid|string $tweetId tweet id to search for
-		 * @return Tweet|null Tweet found or null if not found
+		 * @param Uuid|string $authorId author id to search for
+		 * @return author|null author found or null if not found
 		 * @throws \PDOException when mySQL related errors occur
 		 * @throws \TypeError when a variable are not the correct data type
 		 **/
-		public static function getTweetByTweetId(\PDO $pdo, $tweetId) : ?Tweet {
-			// sanitize the tweetId before searching
+		public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
+			// sanitize the authorId before searching
 			try {
-				$tweetId = self::validateUuid($tweetId);
+				$authorId = self::validateUuid($authorId);
 			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 
 			// create query template
-			$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetId = :tweetId";
+			$query = "SELECT authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, 
+       					authorUserName FROM author WHERE authorId = :authorId";
 			$statement = $pdo->prepare($query);
 
 			// bind the tweet id to the place holder in the template
