@@ -326,7 +326,7 @@ use Ramsey\Uuid\Uuid;
 				"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
 			$statement->execute($parameters);
 
-		 * */
+		 **/
 
 
 
@@ -397,9 +397,9 @@ use Ramsey\Uuid\Uuid;
 			// sanitize the authorId before searching
 
 			try {
-				$authorId = self::validateUuid($authorId);
-			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
+						$authorId = self::validateUuid($authorId);
+			} 				catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+							throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 
 			// create query template
