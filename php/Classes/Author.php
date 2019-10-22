@@ -58,7 +58,8 @@ use Ramsey\Uuid\Uuid;
 	 	* @throws \UnexpectedValueException if any of the parameters are invalid
 	 	**/
 
-		public function __construct(string $newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash, ?string $newAuthorUsername) {
+		public function __construct(string $newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash,
+											 ?string $newAuthorUsername) {
 				try {
 						$this->setAuthorId($newAuthorId);
 						$this->setAuthorActivationToken($newAuthorActivationToken);
@@ -303,7 +304,7 @@ use Ramsey\Uuid\Uuid;
 		 * @throws \PDOException when mySQL related errors occur
 		 * @throws \TypeError if $pdo is not a PDO connection object
 		 **/
-		public function insert(\PDO $pdo) : void {
+		public function insert(\PDO $pdo): void {
 
 
 			// create query template
@@ -336,6 +337,7 @@ use Ramsey\Uuid\Uuid;
 		 * @throws \PDOException when mySQL related errors occur
 		 * @throws \TypeError if $pdo is not a PDO connection object
 		 **/
+
 		public function delete(\PDO $pdo) : void {
 
 			// create query template
@@ -354,18 +356,19 @@ use Ramsey\Uuid\Uuid;
 		 * @throws \PDOException when mySQL related errors occur
 		 *
 		 **/
+
 		public function update(\PDO $pdo) : void {
 
 				// create query template
-				$query = "UPDATE author SET authorAvatarUrl = :authorAvatarUrl, authorActivationToken = :authorActivationToken, 
+			$query = "UPDATE author SET authorActivationToken = :authorActivationToken, authorAvatarUrl = :authorAvatarUrl,  
     						authorEmail = :authorEmail, authorHash = :authorHash, authorUsername = :authorUsername 
-							WHERE authorId = :authorId";
+						WHERE authorId = :authorId";
 				$statement = $pdo->prepare($query);
 
 				//bind the member variables to the place holders in the template
 
-				$parameters = ["authorId" => $this->authorId->getBytes(), "authorAvatarUrl" => $this->authorAvatarUrl,
-					"authorActivationToken" => $this->authorActivationToken, "authorEmail" => $this->authorEmail,
+				$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationToken" => $this->authorActivationToken,
+					"authorAvatarUrl" => $this->authorAvatarUrl, "authorEmail" => $this->authorEmail,
 					"authorHash" => $this->authorHash, "authorUserName" => $this->authorUsername];
 				$statement = $pdo->execute($parameters);
 			}
@@ -389,8 +392,10 @@ use Ramsey\Uuid\Uuid;
 		 * @throws \PDOException when mySQL related errors occur
 		 * @throws \TypeError when a variable are not the correct data type
 		 **/
+
 		public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
 			// sanitize the authorId before searching
+
 			try {
 				$authorId = self::validateUuid($authorId);
 			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -398,7 +403,8 @@ use Ramsey\Uuid\Uuid;
 			}
 
 			// create query template
-			$query = "SELECT authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, 
+
+			$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, 
        					authorUsername FROM author WHERE authorId = :authorId";
 			$statement = $pdo->prepare($query);
 
@@ -412,10 +418,11 @@ use Ramsey\Uuid\Uuid;
 				$statement->setFetchMode(\PDO::FETCH_ASSOC);
 				$row = $statement->fetch();
 				if($row !== false) {
-					$tweet = new author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"],
+					$author = new author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"],
 												$row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
 				}
 			} catch(\Exception $exception) {
+
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
@@ -423,120 +430,47 @@ use Ramsey\Uuid\Uuid;
 		}
 
 		/**
-		 * gets the author by profile id
+		 * gets the author by username
 		 *
 		 * @param \PDO $pdo PDO connection object
-		 * @param Uuid|string $tweetProfileId profile id to search by
-		 * @return \SplFixedArray SplFixedArray of Tweets found
+		 * @param \SplFixedArray  SplFixedArray of authors found or null if not found
+		 * @return \SplFixedArray SplFixedArray of authors found
 		 * @throws \PDOException when mySQL related errors occur
 		 * @throws \TypeError when variables are not the correct data type
 		 **/
-		public static function getTweetByTweetProfileId(\PDO $pdo, $tweetProfileId) : \SplFixedArray {
-
-			try {
-				$tweetProfileId = self::validateUuid($tweetProfileId);
-			} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-				throw(new \PDOException($exception->getMessage(), 0, $exception));
-			}
+		public static function getAllAuthors(\PDO $pdo) : \SplFixedArray {
 
 			// create query template
-			$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetProfileId = :tweetProfileId";
-			$statement = $pdo->prepare($query);
-			// bind the tweet profile id to the place holder in the template
-			$parameters = ["tweetProfileId" => $tweetProfileId->getBytes()];
-			$statement->execute($parameters);
-			// build an array of tweets
-			$tweets = new \SplFixedArray($statement->rowCount());
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			while(($row = $statement->fetch()) !== false) {
-				try {
-					$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
-					$tweets[$tweets->key()] = $tweet;
-					$tweets->next();
-				} catch(\Exception $exception) {
-					// if the row couldn't be converted, rethrow it
-					throw(new \PDOException($exception->getMessage(), 0, $exception));
-				}
-			}
-			return($tweets);
-		}
-
-		/**
-		 * gets the Tweet by content
-		 *
-		 * @param \PDO $pdo PDO connection object
-		 * @param string $tweetContent tweet content to search for
-		 * @return \SplFixedArray SplFixedArray of Tweets found
-		 * @throws \PDOException when mySQL related errors occur
-		 * @throws \TypeError when variables are not the correct data type
-		 **/
-		public static function getTweetByTweetContent(\PDO $pdo, string $tweetContent) : \SplFixedArray {
-			// sanitize the description before searching
-			$tweetContent = trim($tweetContent);
-			$tweetContent = filter_var($tweetContent, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-			if(empty($tweetContent) === true) {
-				throw(new \PDOException("tweet content is invalid"));
-			}
-
-			// escape any mySQL wild cards
-			$tweetContent = str_replace("_", "\\_", str_replace("%", "\\%", $tweetContent));
-
-			// create query template
-			$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
-			$statement = $pdo->prepare($query);
-
-			// bind the tweet content to the place holder in the template
-			$tweetContent = "%$tweetContent%";
-			$parameters = ["tweetContent" => $tweetContent];
-			$statement->execute($parameters);
-
-			// build an array of tweets
-			$tweets = new \SplFixedArray($statement->rowCount());
-			$statement->setFetchMode(\PDO::FETCH_ASSOC);
-			while(($row = $statement->fetch()) !== false) {
-				try {
-					$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
-					$tweets[$tweets->key()] = $tweet;
-					$tweets->next();
-				} catch(\Exception $exception) {
-					// if the row couldn't be converted, rethrow it
-					throw(new \PDOException($exception->getMessage(), 0, $exception));
-				}
-			}
-			return($tweets);
-		}
-
-		/**
-		 * gets all Tweets
-		 *
-		 * @param \PDO $pdo PDO connection object
-		 * @return \SplFixedArray SplFixedArray of Tweets found or null if not found
-		 * @throws \PDOException when mySQL related errors occur
-		 * @throws \TypeError when variables are not the correct data type
-		 **/
-		public static function getAllTweets(\PDO $pdo) : \SPLFixedArray {
-			// create query template
-			$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet";
+			$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUserName FROM author";
 			$statement = $pdo->prepare($query);
 			$statement->execute();
 
-			// build an array of tweets
-			$tweets = new \SplFixedArray($statement->rowCount());
+			//build an array of authors//
+			$authors = new \SplFixedArray($statement->rowCount());
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
 			while(($row = $statement->fetch()) !== false) {
 				try {
-					$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
-					$tweets[$tweets->key()] = $tweet;
-					$tweets->next();
+					$author = new Author($row["authorId"],  $row[ "authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"],
+						$row["authorHash"],$row["authorUserName"]);
+					$authors[$authors->key()] = $author;
+					$authors->next();
+
 				} catch(\Exception $exception) {
-					// if the row couldn't be converted, rethrow it
+
+					//if the row couldn't be converted, rethrow it
 					throw(new \PDOException($exception->getMessage(), 0, $exception));
 				}
 			}
-			return ($tweets);
+			return ($authors);
 		}
 
-		public function jsonSerialize() {
+	/**
+	* formats the state variables for JSON serialization
+	*
+	* @return array resulting state variables to serialize
+	**/
+
+		public function jsonSerialize(): array {
 			$fields = get_object_vars($this);
 			$fields["authorId"] = $this->authorId->toString();
 			unset($fields["authorHash"]);
