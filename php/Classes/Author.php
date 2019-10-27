@@ -68,7 +68,10 @@ class Author implements \JsonSerializable {
 	 * @param string $newAuthorEmail string containing email
 	 * @param string $newAuthorHash string containing new hash
 	 * @param string $newAuthorUsername username of author
-	 * @throws \UnexpectedValueException if any of the parameters are invalid
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds
+	 * @throws \TypeError if a data type violates a data hint
+	 * @throws \Exception if some other exception occurs
 	 **/
 
 	public function __construct(string $newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash,
@@ -156,9 +159,9 @@ class Author implements \JsonSerializable {
 	}
 
 	/**
-	 * accessor method for Avatar
+	 * accessor method for Avatar url
 	 *
-	 * @return string value of Avatar or null
+	 * @return string value of Avatar url or null
 	 **/
 
 	public function getAuthorAvatarUrl(): ?string {
@@ -169,8 +172,8 @@ class Author implements \JsonSerializable {
 	 * mutator method for Avatar
 	 *
 	 * @param string $newAuthorAvatarUrl new value of avatar
-	 * @throws \InvalidArgumentException if $newAvatar is not a string or insecure
-	 * @throws \RangeException if $newAuthorAvatarUrl is > 32 characters
+	 * @throws \InvalidArgumentException if $newAvatar is not a string
+	 * @throws \RangeException if $newAuthorAvatarUrl is > 255 characters
 	 * @throws \TypeError if $newAuthorAvatarUrl is not a string
 	 *
 	 **/
