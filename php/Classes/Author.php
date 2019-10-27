@@ -298,6 +298,7 @@ class Author implements \JsonSerializable {
 	 **/
 
 	public function setAuthorUsername(string $newAuthorUsername): void {
+
 		// verify the username is secure
 		$newAuthorUsername = trim($newAuthorUsername);
 		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -321,28 +322,37 @@ class Author implements \JsonSerializable {
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError if $pdo is not a PDO connection object
 	 **/
+
 	public function insert(\PDO $pdo): void {
 
 
 		// create query template
-
-		$query = "INSERT INTO author(authorId,authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) 
+		$query = "INSERT INTO author(authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) 
 							VALUES(:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorHash, :authorUsername)";
 		$statement = $pdo->prepare($query);
 
+		//bind member variables to the place holder's in this template
 		$parameters = ["authorId" => $this->authorId->getBytes(), "authorAvatarUrl" => $this->authorAvatarUrl, "authorActivationToken" => $this->authorActivationToken,
 			"authorEmail" => $this->authorEmail, "authorHash" => $this->authorHash, "authorUserName" => $this->authorUsername];
 		$statement->execute($parameters);
 	}
 
 	/**
-	 *bind the member variables to the place holders in the template
-	 *$formattedDate = $this->authorDate->format("Y-m-d H:i:s.u");
-	 *$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationTokenId" => $this->authorActivationToken->getBytes(),
-	 *"authorAvatarUrl" => $this->authorAvatarUrl->getBytes(),"authorEmail" => $this->authorEmail->getBytes(),
-	 *"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
-	 *$statement->execute($parameters);
-	 **/
+	 * updates Avatar Url from mySQL
+	 * @param \PDO $pdo PDO connection object
+	 * @param \PDOException when mySQL related errors occurs
+	 * @throws \TypeError if $pdo  is not  a PDO connection port
+	 */
+
+	public function update(\PDO $PDO, $authorId ) : void {
+		$query = "UPDATE author SET authorId=:authorId, authorActivationToken=:authorActivationToken, authorAvatarUrl=:authorAvatarUrl, authorEmail=:authorEmail, 
+    										authorHash=:authorHash, authorUsername=:authorUsername WHERE authorId = :authorId";
+		$statement = $PDO->prepare($query);
+
+		$parameters = ["authorId"=> $this->authorId->getBytes(), "authorActivationToken" =>$this->authorActivationToken, "authorAvatarUrl" => $this->authorAvatarUrl,
+							"authorEmail" =>$this->authorEmail, "authorHash" => $this->authorHash, "authorUsername" => $this->authorUsername];
+		$statement->execute($parameters);
+	}
 
 
 	/**
