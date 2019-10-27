@@ -13,7 +13,6 @@ use Ramsey\Uuid\Uuid;
  * @author Daniel Hernandez
  * @version 1.0.2
  **/
-
 class Author implements \JsonSerializable {
 	use ValidateUuid;
 
@@ -338,24 +337,6 @@ class Author implements \JsonSerializable {
 	}
 
 	/**
-	 * updates Avatar Url from mySQL
-	 * @param \PDO $pdo PDO connection object
-	 * @param \PDOException when mySQL related errors occurs
-	 * @throws \TypeError if $pdo  is not  a PDO connection port
-	 */
-
-	public function update(\PDO $PDO, $authorId ) : void {
-		$query = "UPDATE author SET authorId=:authorId, authorActivationToken=:authorActivationToken, authorAvatarUrl=:authorAvatarUrl, authorEmail=:authorEmail, 
-    										authorHash=:authorHash, authorUsername=:authorUsername WHERE authorId = :authorId";
-		$statement = $PDO->prepare($query);
-
-		$parameters = ["authorId"=> $this->authorId->getBytes(), "authorActivationToken" =>$this->authorActivationToken, "authorAvatarUrl" => $this->authorAvatarUrl,
-							"authorEmail" =>$this->authorEmail, "authorHash" => $this->authorHash, "authorUsername" => $this->authorUsername];
-		$statement->execute($parameters);
-	}
-
-
-	/**
 	 * deletes this author from mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -398,16 +379,6 @@ class Author implements \JsonSerializable {
 		$statement = $pdo->execute($parameters);
 	}
 
-
-	/**
-	 *$formattedDate = $this->authorDate->format("Y-m-d H:i:s.u");
-	 *$parameters = ["authorId" => $this->authorId->getBytes(), "authorActivationTokenId" => $this->authorActivationToken->getBytes(),
-	 *"authorAvatarUrl" => $this->authorAvatarUrl->getBytes(),"authorEmail" => $this->authorEmail->getBytes(),
-	 *"authorHash" => $this->authorHash->getBytes(),"authorUsername" => $this->authorUsername->getBytes(),"authorDate" => $formattedDate];
-	 *$statement->execute($parameters);
-	 *}
-	 **/
-
 	/**
 	 * gets the author by authorId
 	 *
@@ -418,7 +389,7 @@ class Author implements \JsonSerializable {
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
 
-	public static function getAuthorByAuthorId(\PDO $pdo, $authorId): ?Author {
+	public static function getAuthorByAuthorId(\PDO $pdo, $authorId): Author {
 		// sanitize the authorId before searching
 
 		try {
@@ -458,17 +429,26 @@ class Author implements \JsonSerializable {
 	 * gets the author by username
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param \SplFixedArray  SplFixedArray of authors found or null if not found
+	 * @param Uuid|string $authorUsername author username to search by
 	 * @return \SplFixedArray SplFixedArray of authors found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
-	public static function getAllAuthors(\PDO $pdo): \SplFixedArray {
 
-		// create query template
-		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUserName FROM author";
+	public static function getAuthorByAuthorUsername(\PDO $pdo, string $authorUsername): \SplFixedArray {
+		$authorUsername = trim($authorUsername);
+		$authorUsername = filter_var(($authorUsername, filter_validate_username);
+		if(empty($authorUsername) === true) {
+			throw (new \PDOException("author username not valid"));
+		}
+		$authorUsername = str_replace("_", "\\_", str_replace("%", "\\%", $authorUsername));
+
+		$query = "SELECT authorId, authorActivationToken, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorUsername";
 		$statement = $pdo->prepare($query);
-		$statement->execute();
+
+		$authorUsername = "%authorUsername%";
+		$parameters = ["authorUsername" => $authorUsername];
+		$statement = execute($parameters);
 
 		//build an array of authors//
 		$authors = new \SplFixedArray($statement->rowCount());
@@ -476,13 +456,10 @@ class Author implements \JsonSerializable {
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"],
-					$row["authorHash"], $row["authorUserName"]);
+					$row["authorHash"], $row["authorUsername"]);
 				$authors[$authors->key()] = $author;
 				$authors->next();
-
 			} catch(\Exception $exception) {
-
-				//if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
 			}
 		}
