@@ -13,6 +13,7 @@ use Ramsey\Uuid\Uuid;
  * @author Daniel Hernandez
  * @version 1.0.2
  **/
+
 class Author implements \JsonSerializable {
 	use ValidateUuid;
 
@@ -20,52 +21,58 @@ class Author implements \JsonSerializable {
 	 * id for this author; this is the primary key
 	 * @var Uuid $authorId ;
 	 **/
+
 	private $authorId;
 
 	/**
 	 * token handed out to verify that the author is valid and not malicious.
-	 * @var $authorActivationToken
+	 * @var string $authorActivationToken
 	 **/
+
 	private $authorActivationToken;
 
 	/**
 	 * a way for the user to represent themselves
 	 * @var string $authorAvatarUrl
 	 **/
+
 	private $authorAvatarUrl;
 
 	/**
 	 * email for this author; this is a unique index
 	 * @var string $authorEmail
 	 **/
+
 	private $authorEmail;
 
 	/**
 	 * hash for author password
-	 * @var $authorHash
+	 * @var string $authorHash
 	 **/
+
 	private $authorHash;
 
 	/**
 	 * unique username for author
 	 * @var string $authorUsername
 	 **/
+
 	private $authorUsername;
 
 
 	/**
 	 * constructor for this Author
-	 * @param string $newAuthorId id of this author or null if a new author
+	 * @param string|Uuid $newAuthorId id of this author or null if a new author id
 	 * @param string $newAuthorActivationToken activation token to safe guard against malicious accounts
-	 * @param string $newAuthorAvatarUrl string containing avatar
+	 * @param string $newAuthorAvatarUrl string containing avatar url
 	 * @param string $newAuthorEmail string containing email
-	 * @param string $newAuthorHash string containing password hash
+	 * @param string $newAuthorHash string containing new hash
 	 * @param string $newAuthorUsername username of author
 	 * @throws \UnexpectedValueException if any of the parameters are invalid
 	 **/
 
 	public function __construct(string $newAuthorId, ?string $newAuthorActivationToken, string $newAuthorAvatarUrl, string $newAuthorEmail, string $newAuthorHash,
-										 ?string $newAuthorUsername) {
+										 string $newAuthorUsername) {
 		try {
 			$this->setAuthorId($newAuthorId);
 			$this->setAuthorActivationToken($newAuthorActivationToken);
