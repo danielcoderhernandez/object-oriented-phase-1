@@ -437,9 +437,9 @@ class Author implements \JsonSerializable {
 
 	public static function getAuthorByAuthorUsername(\PDO $pdo, string $authorUsername): \SplFixedArray {
 		$authorUsername = trim($authorUsername);
-		$authorUsername = filter_var(($authorUsername, filter_validate_username);
+		$authorUsername = filter_var($authorUsername, filter_validate_Username);
 		if(empty($authorUsername) === true) {
-			throw (new \PDOException("author username not valid"));
+			throw (new \PDOException("  username not valid"));
 		}
 		$authorUsername = str_replace("_", "\\_", str_replace("%", "\\%", $authorUsername));
 
