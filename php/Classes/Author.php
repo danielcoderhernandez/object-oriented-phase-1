@@ -252,7 +252,7 @@ class Author implements \JsonSerializable {
 	 *
 	 * @param string $newAuthorHash
 	 * @throws \InvalidArgumentException if the hash is not secure
-	 * @throws \RangeException if the hash is not 128 characters
+	 * @throws \RangeException if the hash is not 97 characters
 	 * @throws \TypeError if author hash is not a string
 	 **/
 
