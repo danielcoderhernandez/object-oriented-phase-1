@@ -257,6 +257,7 @@ class Author implements \JsonSerializable {
 	 **/
 
 	public function setAuthorHash(string $newAuthorHash): void {
+
 		//enforce that the hash is properly formatted
 		$newAuthorHash = trim($newAuthorHash);
 		$newAuthorHash = strtolower($newAuthorHash);
@@ -265,9 +266,8 @@ class Author implements \JsonSerializable {
 		}
 
 		//enforce the hash is properly formatted as hexadecimal
-
 		if(!ctype_xdigit($newAuthorHash)) {
-			throw(new \InvalidArgumentException("Author hash must be "));
+			throw(new \InvalidArgumentException("Author hash is empty or insecure"));
 		}
 
 
@@ -286,7 +286,7 @@ class Author implements \JsonSerializable {
 	 * @return string value of username
 	 **/
 
-	public function getAuthorUsername(): ?string {
+	public function getAuthorUsername(): string {
 		return ($this->authorUsername);
 	}
 
