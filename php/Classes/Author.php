@@ -120,7 +120,7 @@ class Author implements \JsonSerializable {
 		$this->authorId = $uuid;
 	}
 
-	/**
+	/*
 	 * accessor method for account activation token
 	 *
 	 * @return string value of the activation token
@@ -426,28 +426,29 @@ class Author implements \JsonSerializable {
 	}
 
 	/**
-	 * gets the author by username
+	 * gets the author by email
 	 *
 	 * @param \PDO $pdo PDO connection object
-	 * @param Uuid|string $authorUsername author username to search by
+	 * @param Uuid|string $authorEmail author email to search by
 	 * @return \SplFixedArray SplFixedArray of authors found
 	 * @throws \PDOException when mySQL related errors occur
 	 * @throws \TypeError when variables are not the correct data type
 	 **/
 
-	public static function getAuthorByAuthorUsername(\PDO $pdo, string $authorUsername): \SplFixedArray {
-		$authorUsername = trim($authorUsername);
-		$authorUsername = filter_var($authorUsername, filter_validate_Username);
-		if(empty($authorUsername) === true) {
-			throw (new \PDOException("  username not valid"));
+	public static function getAuthorByAuthorEmail(\PDO $pdo, string $authorEmail): \SplFixedArray {
+		$authorEmail = trim($authorEmail);
+		$authorEmail = filter_var($authorEmail, filter_validate_Email);
+		if(empty($authorEmail) === true) {
+			throw (new \PDOException("  email not valid"));
 		}
-		$authorUsername = str_replace("_", "\\_", str_replace("%", "\\%", $authorUsername));
+		$authorEmail = str_replace("_", "\\_", str_replace("%", "\\%", $authorEmail));
 
-		$query = "SELECT authorId, authorActivationToken, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorUsername";
+		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author 
+						WHERE :authorEmail";
 		$statement = $pdo->prepare($query);
 
-		$authorUsername = "%authorUsername%";
-		$parameters = ["authorUsername" => $authorUsername];
+		$authorEmail = "%authorEmail%";
+		$parameters = ["authorEmail" => $authorEmail];
 		$statement = execute($parameters);
 
 		//build an array of authors//
