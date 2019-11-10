@@ -439,7 +439,7 @@ class Author implements \JsonSerializable {
 		$authorEmail = trim($authorEmail);
 		$authorEmail = filter_var($authorEmail, filter_validate_Email);
 		if(empty($authorEmail) === true) {
-			throw (new \PDOException("  email not valid"));
+			throw (new \PDOException("email not valid"));
 		}
 		$authorEmail = str_replace("_", "\\_", str_replace("%", "\\%", $authorEmail));
 
