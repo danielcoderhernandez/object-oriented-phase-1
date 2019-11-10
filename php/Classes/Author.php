@@ -86,7 +86,7 @@ class Author implements \JsonSerializable {
 
 			//determine what exception type was thrown
 			$exceptionType = get_class($exception);
-			throw(new $exceptionType($exception->getMessage(), 97, $exception));
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
 	}
 
@@ -444,7 +444,7 @@ class Author implements \JsonSerializable {
 		$authorEmail = str_replace("_", "\\_", str_replace("%", "\\%", $authorEmail));
 
 		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author 
-						WHERE :authorEmail";
+						WHERE :authorEmail = :authorEmail";
 		$statement = $pdo->prepare($query);
 
 		$authorEmail = "%authorEmail%";
