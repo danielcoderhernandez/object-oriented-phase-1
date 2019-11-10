@@ -444,7 +444,7 @@ class Author implements \JsonSerializable {
 		$authorEmail = str_replace("_", "\\_", str_replace("%", "\\%", $authorEmail));
 
 		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author 
-						WHERE :authorEmail = :authorEmail";
+						WHERE authorEmail = :authorEmail";
 		$statement = $pdo->prepare($query);
 
 		$authorEmail = "%authorEmail%";
